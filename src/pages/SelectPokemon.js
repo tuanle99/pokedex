@@ -16,6 +16,8 @@ import {
 function SelectPokemon(props) {
   let current_index = props.match.params.id;
 
+  const [notFound, setNotFound] = useState(false);
+
   const [name, setName] = useState("");
   const [image_front, setImage_Front] = useState("");
   const [stats, setStats] = useState([]);
@@ -111,6 +113,10 @@ function SelectPokemon(props) {
         setType(data.types);
         setHeight(data.height / 10);
         setWeight(data.weight / 10);
+      })
+      .catch((e) => {
+        console.log("Not current index");
+        setNotFound(true);
       });
 
     fetch(`https://pokeapi.co/api/v2/pokemon-species/${current_index}`)
@@ -143,99 +149,106 @@ function SelectPokemon(props) {
   }
 
   return (
-    <Container>
-      <Grid container item sx={{ mt: "10rem" }}>
-        <Grid item xs={12}>
-          <Item style={{ fontSize: "20px", fontWeight: "bold" }}>
-            {setCap()}
-          </Item>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <img
-            src={image_front}
-            alt="front"
-            style={{ width: "100%", height: "100%" }}
-            sx={{ px: "2rem" }}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Item sx={{ mt: "2rem" }}>Pokédex data</Item>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableBody>
-                <TableRow>
-                  <TableCell style={{ width: "30%" }}>National №</TableCell>
-                  <TableCell>
-                    <b>{national_no}</b>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{ width: "30%" }}>Type</TableCell>
-                  <TableCell style={{ padding: 0 }}>
-                    {type.map((t) => (
-                      <div
-                        sx={{ m: 1 }}
-                        style={{
-                          borderRadius: 10,
-                          padding: 5,
-                          backgroundColor: type_color(t.type.name),
-                          display: "inline-block",
-                          width: "3rem",
-                          textAlign: "center",
-                          marginInline: "5px",
-                        }}
-                      >
-                        {t.type.name}
-                      </div>
-                    ))}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{ width: "30%" }}>Species</TableCell>
-                  <TableCell>{species}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{ width: "30%" }}>Height</TableCell>
-                  <TableCell>{height} m</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{ width: "30%" }}>Weight</TableCell>
-                  <TableCell>{weight} kg</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
-      <Grid item xs={12} sx={{ mt: "2rem" }}>
-        <Item>Stats</Item>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableBody>
-              {stats.map((stat) => (
-                <TableRow key={stat.stat.name}>
-                  <TableCell style={{ width: "10%", textAlign: "right" }}>
-                    {stat_name(stat.stat.name)}
-                  </TableCell>
-                  <TableCell style={{ width: "5%", textAlign: "left" }}>
-                    {stat.base_stat}
-                  </TableCell>
-                  <TableCell style={{ width: "85%", textAlign: "left" }}>
-                    <Stack sx={{ color: stat_bar_color(stat.base_stat) }}>
-                      <LinearProgress
-                        variant="determinate"
-                        color="inherit"
-                        value={normalise(stat.base_stat)}
-                      />
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
-    </Container>
+    <div>
+      {notFound ? (
+        <div>Pokemon Not Found</div>
+      ) : (
+        <Container>
+          <Grid container item sx={{ mt: "10rem" }}>
+            <Grid item xs={12}>
+              <Item style={{ fontSize: "20px", fontWeight: "bold" }}>
+                {setCap()}
+              </Item>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <img
+                src={image_front}
+                alt="front"
+                style={{ width: "100%", height: "100%" }}
+                sx={{ px: "2rem" }}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Item sx={{ mt: "2rem" }}>Pokédex data</Item>
+              <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                  <TableBody>
+                    <TableRow>
+                      <TableCell style={{ width: "30%" }}>National №</TableCell>
+                      <TableCell>
+                        <b>{national_no}</b>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell style={{ width: "30%" }}>Type</TableCell>
+                      <TableCell style={{ padding: 0 }}>
+                        {type.map((t) => (
+                          <div
+                            key={t.type.name}
+                            sx={{ m: 1 }}
+                            style={{
+                              borderRadius: 10,
+                              padding: 5,
+                              backgroundColor: type_color(t.type.name),
+                              display: "inline-block",
+                              width: "3rem",
+                              textAlign: "center",
+                              marginInline: "5px",
+                            }}
+                          >
+                            {t.type.name}
+                          </div>
+                        ))}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell style={{ width: "30%" }}>Species</TableCell>
+                      <TableCell>{species}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell style={{ width: "30%" }}>Height</TableCell>
+                      <TableCell>{height} m</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell style={{ width: "30%" }}>Weight</TableCell>
+                      <TableCell>{weight} kg</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sx={{ mt: "2rem" }}>
+            <Item>Stats</Item>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableBody>
+                  {stats.map((stat) => (
+                    <TableRow key={stat.stat.name}>
+                      <TableCell style={{ width: "10%", textAlign: "right" }}>
+                        {stat_name(stat.stat.name)}
+                      </TableCell>
+                      <TableCell style={{ width: "5%", textAlign: "left" }}>
+                        {stat.base_stat}
+                      </TableCell>
+                      <TableCell style={{ width: "85%", textAlign: "left" }}>
+                        <Stack sx={{ color: stat_bar_color(stat.base_stat) }}>
+                          <LinearProgress
+                            variant="determinate"
+                            color="inherit"
+                            value={normalise(stat.base_stat)}
+                          />
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Container>
+      )}
+    </div>
   );
 }
 
