@@ -33,7 +33,7 @@ function ListAllPokemon(props) {
             .then((res) => res.json())
             // eslint-disable-next-line no-loop-func
             .then((res) => {
-              setListPokemon((listPokemon) => [
+              setListPokemon([
                 ...listPokemon,
                 {
                   id: res.id,
