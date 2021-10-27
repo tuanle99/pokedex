@@ -17,9 +17,9 @@ function ListAllPokemon(props) {
   const [listPokemon, setListPokemon] = useState([]);
   const [maxCount, setMaxCount] = useState(0);
 
-  useEffect(() => {}, []);
-
-  getAllPokemon("https://pokeapi.co/api/v2/pokemon?offset=0&limit=12");
+  useEffect(() => {
+    getAllPokemon("https://pokeapi.co/api/v2/pokemon?offset=0&limit=12");
+  }, []);
 
   function getAllPokemon(url) {
     setListPokemon([]);
@@ -45,7 +45,7 @@ function ListAllPokemon(props) {
               ]);
             });
         }
-        console.log(listPokemon);
+
         setLoading(false);
       });
   }
