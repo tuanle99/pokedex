@@ -13,7 +13,9 @@ import {
   Stack,
 } from "@mui/material";
 
-function Home() {
+function SelectPokemon(props) {
+  let current_index = props.match.params.id;
+
   const [name, setName] = useState("");
   const [image_front, setImage_Front] = useState("");
   const [stats, setStats] = useState([]);
@@ -22,7 +24,7 @@ function Home() {
   const [species, setSpecies] = useState("");
   const [height, setHeight] = useState(0.0);
   const [weight, setWeight] = useState(0.0);
-  let current_index = 6;
+
   const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -126,15 +128,17 @@ function Home() {
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
-  const normalise = (value) => ((value - 0) * 100) / (120 - 0);
+  const normalise = (value) => ((value - 0) * 100) / (180 - 0);
 
   function stat_bar_color(stat) {
-    if (stat < 51) {
+    if (stat < 60) {
       return "#ff7f0f";
-    } else if (stat < 100) {
+    } else if (stat < 90) {
       return "#ffdd57";
-    } else {
+    } else if (stat < 120) {
       return "#a0e515";
+    } else {
+      return "#00c2b8";
     }
   }
 
@@ -235,4 +239,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default SelectPokemon;
