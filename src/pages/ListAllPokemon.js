@@ -28,26 +28,24 @@ function ListAllPokemon(props) {
         setMaxCount(Math.floor(data.count / 12));
         setListPokemon([]);
         for (let i of data.results) {
-          const w = new Promise(
-            fetch(i.url)
-              .then((res) => res.json())
-              // eslint-disable-next-line no-loop-func
-              .then((res) => {
-                setListPokemon((listPokemon) => [
-                  ...listPokemon,
-                  {
-                    id: res.id,
-                    name: i.name,
-                    url: i.url,
-                    image_url:
-                      res.sprites.other["official-artwork"].front_default,
-                  },
-                ]);
-              })
-          );
+          fetch(i.url)
+            .then((res) => res.json())
+            // eslint-disable-next-line no-loop-func
+            .then((res) => {
+              setListPokemon((listPokemon) => [
+                ...listPokemon,
+                {
+                  id: res.id,
+                  name: i.name,
+                  url: i.url,
+                  image_url:
+                    res.sprites.other["official-artwork"].front_default,
+                },
+              ]);
+            });
         }
-        setLoading(false);
       });
+    setLoading(false);
   }
 
   function setCap(name) {
