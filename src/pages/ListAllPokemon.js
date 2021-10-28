@@ -22,30 +22,30 @@ function ListAllPokemon(props) {
   }, []);
 
   function getAllPokemon(url) {
-    setListPokemon([]);
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
         setMaxCount(Math.floor(data.count / 12));
-
+        setListPokemon([]);
         for (let i of data.results) {
-          fetch(i.url)
-            .then((res) => res.json())
-            // eslint-disable-next-line no-loop-func
-            .then((res) => {
-              setListPokemon([
-                ...listPokemon,
-                {
-                  id: res.id,
-                  name: i.name,
-                  url: i.url,
-                  image_url:
-                    res.sprites.other["official-artwork"].front_default,
-                },
-              ]);
-            });
+          const w = new Promise(
+            fetch(i.url)
+              .then((res) => res.json())
+              // eslint-disable-next-line no-loop-func
+              .then((res) => {
+                setListPokemon((listPokemon) => [
+                  ...listPokemon,
+                  {
+                    id: res.id,
+                    name: i.name,
+                    url: i.url,
+                    image_url:
+                      res.sprites.other["official-artwork"].front_default,
+                  },
+                ]);
+              })
+          );
         }
-
         setLoading(false);
       });
   }
@@ -58,6 +58,7 @@ function ListAllPokemon(props) {
     getAllPokemon(
       `https://pokeapi.co/api/v2/pokemon?offset=${(value - 1) * 12}&limit=12`
     );
+    listPokemon.sort((a, b) => (a.id > b.id ? 1 : -1));
   };
 
   return (
