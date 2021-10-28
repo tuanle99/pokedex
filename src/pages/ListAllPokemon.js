@@ -27,23 +27,32 @@ function ListAllPokemon(props) {
       .then((data) => {
         setMaxCount(Math.floor(data.count / 12));
         setListPokemon([]);
-        for (let i of data.results) {
-          fetch(i.url)
-            .then((res) => res.json())
-            // eslint-disable-next-line no-loop-func
-            .then((res) => {
-              setListPokemon((listPokemon) => [
-                ...listPokemon,
-                {
-                  id: res.id,
-                  name: i.name,
-                  url: i.url,
-                  image_url:
-                    res.sprites.other["official-artwork"].front_default,
-                },
-              ]);
+        let allPromise = Promise.all(
+          data.results.map((e) => {
+            return new Promise((resolve, reject) => {
+              resolve(e);
             });
-        }
+          })
+        );
+        console.log(allPromise);
+        allPromise.then((e) => {
+          e.map((res) => {
+            fetch(res.url)
+              .then((e) => e.json())
+              .then((e) => {
+                setListPokemon((listPokemon) => [
+                  ...listPokemon,
+                  {
+                    id: e.id,
+                    name: res.name,
+                    url: res.url,
+                    image_url:
+                      e.sprites.other["official-artwork"].front_default,
+                  },
+                ]);
+              });
+          });
+        });
       });
     setLoading(false);
   }
@@ -88,6 +97,9 @@ function ListAllPokemon(props) {
                 </ButtonBase>
               </Grid>
             ))}
+            {/* {Promise.all(listPokemon).then((p) => {
+              <div>{p.name}</div>;
+            })} */}
           </Grid>
           <Container style={{ flex: 1 }} sx={{ m: "1rem" }}>
             <Pagination count={maxCount} onChange={handlePage} />

@@ -29,7 +29,7 @@ function Header() {
         history.push("/listPokemon");
         break;
       default:
-        history.push("/home");
+        history.push("/");
         break;
     }
   }
