@@ -34,8 +34,9 @@ function ListAllPokemon(props) {
             });
           })
         );
-        console.log(allPromise);
+        // console.log(allPromise);
         allPromise.then((e) => {
+          // eslint-disable-next-line array-callback-return
           e.map((res) => {
             fetch(res.url)
               .then((e) => e.json())

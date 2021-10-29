@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useState, useEffect } from "react";
 import {
   Grid,
@@ -5,6 +6,7 @@ import {
   Paper,
   styled,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 
 import PokeData from "../Components/PokeData";
@@ -24,6 +26,7 @@ function SelectPokemon(props) {
   const [species, setSpecies] = useState("");
   const [height, setHeight] = useState(0.0);
   const [weight, setWeight] = useState(0.0);
+  const [abilities, setAbilities] = useState([]);
 
   const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -49,6 +52,15 @@ function SelectPokemon(props) {
         setType(data.types);
         setHeight(data.height / 10);
         setWeight(data.weight / 10);
+        data.abilities.map((e) => {
+          setAbilities((listAbilities) => [
+            ...listAbilities,
+            {
+              name: e.ability.name,
+              is_hidden: e.is_hidden,
+            },
+          ]);
+        });
       })
       .catch((e) => {
         console.log("Not current index");
@@ -66,6 +78,7 @@ function SelectPokemon(props) {
       });
 
     setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function setCap() {
@@ -104,11 +117,14 @@ function SelectPokemon(props) {
                 species={species}
                 height={height}
                 weight={weight}
+                abilities={abilities}
               />
             </Grid>
           </Grid>
           <Grid item xs={12} sx={{ mt: "2rem" }}>
-            <Item>Stats</Item>
+            <Item>
+              <Typography variant="h5">Base Stats</Typography>
+            </Item>
             <PokeStat stats={stats} />
           </Grid>
         </Container>

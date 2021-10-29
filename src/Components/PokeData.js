@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React from "react";
 import {
   Table,
@@ -9,7 +10,7 @@ import {
 } from "@mui/material";
 
 function PokeData(props) {
-  const { national_no, type, species, height, weight } = props;
+  const { national_no, type, species, height, weight, abilities } = props;
 
   function type_color(type_select) {
     switch (type_select) {
@@ -52,6 +53,10 @@ function PokeData(props) {
       default:
         return "";
     }
+  }
+
+  function setCap(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   return (
@@ -97,6 +102,19 @@ function PokeData(props) {
           <TableRow>
             <TableCell style={{ width: "30%" }}>Weight</TableCell>
             <TableCell>{weight} kg</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell style={{ width: "30%" }}>Abilities</TableCell>
+            <TableCell>
+              {abilities.map((a) => (
+                <div key={a.name}>
+                  <p>
+                    {setCap(a.name)}
+                    {a.is_hidden ? " (hidden ability)" : ""}
+                  </p>
+                </div>
+              ))}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

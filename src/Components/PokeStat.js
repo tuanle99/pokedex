@@ -46,6 +46,14 @@ function PokeStat(props) {
     }
   }
 
+  function totalStat() {
+    let total = 0;
+    stats.map((s) => {
+      total += s.base_stat;
+    });
+    return total;
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
@@ -69,6 +77,14 @@ function PokeStat(props) {
               </TableCell>
             </TableRow>
           ))}
+          <TableRow>
+            <TableCell style={{ width: "10%", textAlign: "right" }}>
+              Total
+            </TableCell>
+            <TableCell>
+              <b>{totalStat()}</b>
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
