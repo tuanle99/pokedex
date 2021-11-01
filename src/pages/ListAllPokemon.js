@@ -8,6 +8,9 @@ import {
   ButtonBase,
   Pagination,
   CircularProgress,
+  Stack,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import { useHistory } from "react-router-dom";
 
@@ -17,8 +20,18 @@ function ListAllPokemon(props) {
   const [listPokemon, setListPokemon] = useState([]);
   const [maxCount, setMaxCount] = useState(0);
 
+  const [listPoke, setListPoke] = useState([]);
+  const [isSingleSearch, setIsSingleSearch] = useState(false);
+  const [singlePokemon, setSinglePokemon] = useState();
+
   useEffect(() => {
     getAllPokemon("https://pokeapi.co/api/v2/pokemon?offset=0&limit=12");
+
+    fetch("https://pokeapi.co/api/v2/pokemon/?limit=1118")
+      .then((res) => res.json())
+      .then((res) => {
+        setListPoke(res.results);
+      });
   }, []);
 
   function getAllPokemon(url) {
@@ -36,55 +49,129 @@ function ListAllPokemon(props) {
     setLoading(false);
   }
 
+  function getSinglePokemon(url) {
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => {
+        setSinglePokemon(res);
+      });
+    setIsSingleSearch(true);
+    // setLoading(false);
+  }
+
   function setCap(name) {
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
-  console.log(listPokemon);
+  function setLowerCase(name) {
+    return name.charAt(0).toLowerCase() + name.slice(1);
+  }
 
   const handlePage = (event, value) => {
     getAllPokemon(
       `https://pokeapi.co/api/v2/pokemon?offset=${(value - 1) * 12}&limit=12`
     );
-    listPokemon.sort((a, b) => (a.id > b.id ? 1 : -1));
   };
 
+  function getSingle(single) {
+    // setLoading(true);
+    console.log(single);
+    if (single != null && single !== undefined) {
+      getSinglePokemon(
+        `https://pokeapi.co/api/v2/pokemon/${setLowerCase(single)}/`
+      );
+    } else {
+      setIsSingleSearch(false);
+    }
+  }
+
   return (
-    <Container sx={{ mt: "5rem" }}>
+    <Container sx={{ mt: "2rem" }}>
       {loading ? (
         <Container sx={{ textAlign: "center" }}>
           <CircularProgress />
         </Container>
       ) : (
         <Container>
-          <Grid container>
-            {listPokemon.map((p) => (
-              <Grid item xs={6} md={3} key={p.id} sx={{ p: "1rem" }}>
-                <ButtonBase
-                  onClick={(event) => {
-                    history.push(`/pokemon/${p.id}`);
-                  }}
-                >
-                  <Card>
-                    <CardMedia
-                      component="img"
-                      image={p.sprites.other["official-artwork"].front_default}
-                      alt={p.name}
-                    />
-                    <CardContent>
-                      {p.id}.{setCap(p.name)}
-                    </CardContent>
-                  </Card>
-                </ButtonBase>
+          <Stack sx={{ mb: "2rem" }}>
+            <Autocomplete
+              options={listPoke.map((option) => setCap(option.name))}
+              onChange={(event, newValue) => {
+                getSingle(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Search Pokemon" />
+              )}
+            />
+          </Stack>
+
+          {!isSingleSearch ? (
+            <Container>
+              <Grid container>
+                {listPokemon.map((p) => (
+                  <Grid item xs={6} md={3} key={p.id} sx={{ p: "1rem" }}>
+                    <ButtonBase
+                      onClick={(event) => {
+                        history.push(`/pokemon/${p.id}`);
+                      }}
+                    >
+                      <Card>
+                        <CardMedia
+                          component="img"
+                          image={
+                            p.sprites.other["official-artwork"].front_default
+                          }
+                          alt={p.name}
+                        />
+                        <CardContent>
+                          {p.id}.{setCap(p.name)}
+                        </CardContent>
+                      </Card>
+                    </ButtonBase>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-            {/* {Promise.all(listPokemon).then((p) => {
-              <div>{p.name}</div>;
-            })} */}
-          </Grid>
-          <Container style={{ flex: 1 }} sx={{ m: "1rem" }}>
-            <Pagination count={maxCount} onChange={handlePage} />
-          </Container>
+              <Container style={{ flex: 1 }} sx={{ m: "1rem" }}>
+                <Pagination count={maxCount} onChange={handlePage} />
+              </Container>
+            </Container>
+          ) : (
+            <Container>
+              {singlePokemon !== undefined ? (
+                <Container>
+                  <Grid
+                    item
+                    xs={6}
+                    md={3}
+                    key={singlePokemon.id}
+                    sx={{ p: "1rem" }}
+                  >
+                    <ButtonBase
+                      onClick={(event) => {
+                        history.push(`/pokemon/${singlePokemon.id}`);
+                      }}
+                    >
+                      <Card>
+                        <CardMedia
+                          component="img"
+                          image={
+                            singlePokemon.sprites.other["official-artwork"]
+                              .front_default
+                          }
+                          alt={singlePokemon.name}
+                        />
+                        <CardContent>
+                          {singlePokemon.id}.{setCap(singlePokemon.name)}
+                        </CardContent>
+                      </Card>
+                    </ButtonBase>
+                  </Grid>
+                </Container>
+              ) : (
+                <div>"Error Occur Try Again Later"</div>
+              )}
+            </Container>
+          )}
         </Container>
       )}
     </Container>
