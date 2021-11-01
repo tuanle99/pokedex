@@ -15,8 +15,16 @@ function App() {
       <Header />
       <Switch>
         <Route exact path={["/", "/pokedex"]} component={Home} />
-        <Route exact path="/pokemon/:id" component={SelectPokemon} />
-        <Route exact path="/listPokemon/" component={ListAllPokemon} />
+        <Route
+          exact
+          path={["pokedex/pokemon/:id", "/pokemon/:id"]}
+          component={SelectPokemon}
+        />
+        <Route
+          exact
+          path={["pokedex/listPokemon", "/listPokemon"]}
+          component={ListAllPokemon}
+        />
       </Switch>
       <Footer />
     </Router>
