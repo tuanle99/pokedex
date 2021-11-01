@@ -27,33 +27,11 @@ function ListAllPokemon(props) {
       .then((data) => {
         setMaxCount(Math.floor(data.count / 12));
         setListPokemon([]);
-        let allPromise = Promise.all(
-          data.results.map((e) => {
-            return new Promise((resolve, reject) => {
-              resolve(e);
-            });
-          })
-        );
-        // console.log(allPromise);
-        allPromise.then((e) => {
-          // eslint-disable-next-line array-callback-return
-          e.map((res) => {
-            fetch(res.url)
-              .then((e) => e.json())
-              .then((e) => {
-                setListPokemon((listPokemon) => [
-                  ...listPokemon,
-                  {
-                    id: e.id,
-                    name: res.name,
-                    url: res.url,
-                    image_url:
-                      e.sprites.other["official-artwork"].front_default,
-                  },
-                ]);
-              });
+        Promise.all(data.results.map((u) => fetch(u.url)))
+          .then((responses) => Promise.all(responses.map((res) => res.json())))
+          .then((data) => {
+            setListPokemon(data);
           });
-        });
       });
     setLoading(false);
   }
@@ -61,6 +39,8 @@ function ListAllPokemon(props) {
   function setCap(name) {
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
+
+  console.log(listPokemon);
 
   const handlePage = (event, value) => {
     getAllPokemon(
@@ -88,7 +68,7 @@ function ListAllPokemon(props) {
                   <Card>
                     <CardMedia
                       component="img"
-                      image={p.image_url}
+                      image={p.sprites.other["official-artwork"].front_default}
                       alt={p.name}
                     />
                     <CardContent>
