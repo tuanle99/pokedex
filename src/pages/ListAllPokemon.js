@@ -112,7 +112,7 @@ function ListAllPokemon(props) {
                   <Grid item xs={6} md={3} key={p.id} sx={{ p: "1rem" }}>
                     <ButtonBase
                       onClick={(event) => {
-                        history.push(`/pokedex/pokemon/${p.id}`);
+                        history.push(`/pokemon/${p.id}`);
                       }}
                     >
                       <Card>

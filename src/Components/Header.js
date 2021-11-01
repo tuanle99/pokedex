@@ -26,10 +26,10 @@ function Header() {
   function handleNavigate(i) {
     switch (i) {
       case 1:
-        history.push("/pokedex/listPokemon");
+        history.push("/listPokemon");
         break;
       default:
-        history.push("/pokedex");
+        history.push("/");
         break;
     }
   }
