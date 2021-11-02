@@ -62,7 +62,7 @@ function PokeMove(props) {
     <Container sx={{ mt: "1rem" }}>
       <Typography variant="h5">Moves learnt by level up</Typography>
       <TableContainer component={Paper} sx={{ mt: "1rem" }}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ maxHeight: 0 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Lv.</TableCell>
@@ -75,7 +75,7 @@ function PokeMove(props) {
           </TableHead>
           <TableBody>
             {level.map((l) => (
-              <TableRow>
+              <TableRow key={l.move}>
                 <TableCell>{l.level}</TableCell>
                 <TableCell>{setCap(l.move)}</TableCell>
                 <TableCell>
