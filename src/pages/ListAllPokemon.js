@@ -168,7 +168,9 @@ function ListAllPokemon(props) {
                   </Grid>
                 </Container>
               ) : (
-                <div>"Error Occur Try Again Later"</div>
+                <Container sx={{ textAlign: "center" }}>
+                  <CircularProgress />
+                </Container>
               )}
             </Container>
           )}

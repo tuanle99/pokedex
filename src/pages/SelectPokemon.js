@@ -11,6 +11,7 @@ import {
 
 import PokeData from "../Components/PokeData";
 import PokeStat from "../Components/PokeStat";
+import PokeMove from "../Components/PokeMove";
 
 function SelectPokemon(props) {
   let current_index = props.match.params.id;
@@ -27,6 +28,7 @@ function SelectPokemon(props) {
   const [height, setHeight] = useState(0.0);
   const [weight, setWeight] = useState(0.0);
   const [abilities, setAbilities] = useState([]);
+  const [moves, setMoves] = useState([]);
 
   const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -61,6 +63,8 @@ function SelectPokemon(props) {
             },
           ]);
         });
+
+        setMoves(data.moves);
       })
       .catch((e) => {
         console.log("Not current index");
@@ -95,38 +99,52 @@ function SelectPokemon(props) {
         </Container>
       ) : (
         <Container>
-          <Grid container item sx={{ mt: "10rem" }}>
-            <Grid item xs={12}>
-              <Item style={{ fontSize: "20px", fontWeight: "bold" }}>
-                {setCap()}
-              </Item>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <img
-                src={image_front}
-                alt="front"
-                style={{ width: "100%", height: "100%" }}
-                sx={{ px: "2rem" }}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Item sx={{ mt: "2rem" }}>Pokédex data</Item>
-              <PokeData
-                national_no={national_no}
-                type={type}
-                species={species}
-                height={height}
-                weight={weight}
-                abilities={abilities}
-              />
-            </Grid>
-          </Grid>
-          <Grid item xs={12} sx={{ mt: "2rem" }}>
-            <Item>
-              <Typography variant="h5">Base Stats</Typography>
-            </Item>
-            <PokeStat stats={stats} />
-          </Grid>
+          {image_front !== "" ? (
+            <Container>
+              <Grid container item sx={{ mt: "10rem" }}>
+                <Grid item xs={12}>
+                  <Item style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    {setCap()}
+                  </Item>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <img
+                    src={image_front}
+                    alt="front"
+                    style={{ width: "100%", height: "100%" }}
+                    sx={{ px: "2rem" }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Item sx={{ mt: "2rem" }}>Pokédex data</Item>
+                  <PokeData
+                    national_no={national_no}
+                    type={type}
+                    species={species}
+                    height={height}
+                    weight={weight}
+                    abilities={abilities}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={12} sx={{ mt: "2rem" }}>
+                <Item>
+                  <Typography variant="h5">Base Stats</Typography>
+                </Item>
+                <PokeStat stats={stats} />
+              </Grid>
+              <Grid item xs={12} sx={{ mt: "2rem" }}>
+                <Item>
+                  <Typography variant="h5">Moves</Typography>
+                </Item>
+                <PokeMove moves={moves} />
+              </Grid>
+            </Container>
+          ) : (
+            <Container sx={{ textAlign: "center" }}>
+              <CircularProgress />
+            </Container>
+          )}
         </Container>
       )}
     </div>
