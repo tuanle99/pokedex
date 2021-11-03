@@ -32,7 +32,7 @@ function PokeData(props) {
             <TableCell style={{ width: "30%" }}>Type</TableCell>
             <TableCell style={{ padding: 0 }}>
               {type.map((t) => (
-                <PokeType type={t.type.name} />
+                <PokeType key={t.type.name} type={t.type.name} />
               ))}
             </TableCell>
           </TableRow>

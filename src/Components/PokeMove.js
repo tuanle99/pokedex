@@ -17,14 +17,15 @@ import PokeType from "./PokeType";
 function PokeMove(props) {
   const { moves } = props;
   const [level, setLevel] = useState([]);
-  //   const [tm, setTM] = useState([]);
+  const [machine, setMachine] = useState([]);
   //   const [evol, setEvol] = useState([]);
   //   const [egg, setEgg] = useState([]);
   //   const [tutor, setTutor] = useState([]);
-  //   const [tr, setTR] = useState([]);
+  //   const [transfer, setTransfer] = useState([]);
 
   useEffect(() => {
     setLevel([]);
+    setMachine([]);
     props.moves.map((m) => {
       if (m.version_group_details[0].move_learn_method.name === "level-up") {
         fetch(m.move.url)
@@ -50,7 +51,38 @@ function PokeMove(props) {
               },
             ]);
           });
+      } else if (
+        m.version_group_details[0].move_learn_method.name === "machine"
+      ) {
+        // console.log(m.move.url);
+        // console.log(m.move.name);
+        fetch(m.move.url)
+          .then((res) => res.json())
+          .then((res) => {
+            let p = res.power;
+            let a = res.accuracy;
+            if (res.power === null) {
+              p = "-";
+            }
+            if (res.accuracy === null) {
+              a = "-";
+            }
+            setMachine((machine) => [
+              ...machine,
+              {
+                // level: m.version_group_details[0].level_learned_at,
+                move: res.name,
+                type: res.type.name,
+                cat: res.damage_class.name,
+                power: p,
+                acc: a,
+              },
+            ]);
+          });
       }
+
+      //tutor
+      //egg
     });
   }, [props.moves]);
 
@@ -60,35 +92,74 @@ function PokeMove(props) {
 
   return (
     <Container sx={{ mt: "1rem" }}>
-      <Typography variant="h5">Moves learnt by level up</Typography>
-      <TableContainer component={Paper} sx={{ mt: "1rem" }}>
-        <Table sx={{ maxHeight: 0 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Lv.</TableCell>
-              <TableCell>Move</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Cat.</TableCell>
-              <TableCell>Power</TableCell>
-              <TableCell>Acc.</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {level.map((l) => (
-              <TableRow key={l.move}>
-                <TableCell>{l.level}</TableCell>
-                <TableCell>{setCap(l.move)}</TableCell>
-                <TableCell>
-                  <PokeType type={l.type} />
-                </TableCell>
-                <TableCell>{setCap(l.cat)}</TableCell>
-                <TableCell>{l.power}</TableCell>
-                <TableCell>{l.acc}</TableCell>
+      <Container>
+        <Typography variant="h5">Moves learnt by level up</Typography>
+        <TableContainer
+          component={Paper}
+          sx={{ mt: "1rem" }}
+          style={{ maxHeight: 400 }}
+        >
+          <Table sx={{ maxHeight: 0 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Lv.</TableCell>
+                <TableCell>Move</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Cat.</TableCell>
+                <TableCell>Power</TableCell>
+                <TableCell>Acc.</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {level.map((l) => (
+                <TableRow key={l.move}>
+                  <TableCell>{l.level}</TableCell>
+                  <TableCell>{setCap(l.move)}</TableCell>
+                  <TableCell>
+                    <PokeType type={l.type} />
+                  </TableCell>
+                  <TableCell>{setCap(l.cat)}</TableCell>
+                  <TableCell>{l.power}</TableCell>
+                  <TableCell>{l.acc}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
+      <Container>
+        <Typography variant="h5">Moves learnt by machine</Typography>
+        <TableContainer
+          component={Paper}
+          sx={{ mt: "1rem" }}
+          style={{ maxHeight: 400 }}
+        >
+          <Table sx={{ maxHeight: 0 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Move</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Cat.</TableCell>
+                <TableCell>Power</TableCell>
+                <TableCell>Acc.</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {machine.map((m) => (
+                <TableRow key={m.move}>
+                  <TableCell>{setCap(m.move)}</TableCell>
+                  <TableCell>
+                    <PokeType type={m.type} />
+                  </TableCell>
+                  <TableCell>{setCap(m.cat)}</TableCell>
+                  <TableCell>{m.power}</TableCell>
+                  <TableCell>{m.acc}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
     </Container>
   );
 }
