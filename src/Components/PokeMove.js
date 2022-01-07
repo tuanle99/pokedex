@@ -1,5 +1,5 @@
 /* eslint-disable array-callback-return */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Table,
@@ -10,9 +10,12 @@ import {
   Paper,
   TableHead,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
 
-import PokeType from "./PokeType";
+import PokeType from './PokeType';
+import move_physical from '../images/categories_image/move_physical.png';
+import move_special from '../images/categories_image/move_special.png';
+import move_status from '../images/categories_image/move_status.png';
 
 function PokeMove(props) {
   const { moves } = props;
@@ -27,17 +30,17 @@ function PokeMove(props) {
     setLevel([]);
     setMachine([]);
     props.moves.map((m) => {
-      if (m.version_group_details[0].move_learn_method.name === "level-up") {
+      if (m.version_group_details[0].move_learn_method.name === 'level-up') {
         fetch(m.move.url)
           .then((res) => res.json())
           .then((res) => {
             let p = res.power;
             let a = res.accuracy;
             if (res.power === null) {
-              p = "-";
+              p = '-';
             }
             if (res.accuracy === null) {
-              a = "-";
+              a = '-';
             }
             setLevel((level) => [
               ...level,
@@ -52,7 +55,7 @@ function PokeMove(props) {
             ]);
           });
       } else if (
-        m.version_group_details[0].move_learn_method.name === "machine"
+        m.version_group_details[0].move_learn_method.name === 'machine'
       ) {
         // console.log(m.move.url);
         // console.log(m.move.name);
@@ -62,10 +65,10 @@ function PokeMove(props) {
             let p = res.power;
             let a = res.accuracy;
             if (res.power === null) {
-              p = "-";
+              p = '-';
             }
             if (res.accuracy === null) {
-              a = "-";
+              a = '-';
             }
             setMachine((machine) => [
               ...machine,
@@ -90,16 +93,26 @@ function PokeMove(props) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  function cat_image(type) {
+    switch (type) {
+      case 'physical':
+        return move_physical;
+      case 'special':
+        return move_special;
+      default:
+        return move_status;
+    }
+  }
+
   return (
-    <Container sx={{ mt: "1rem" }}>
+    <Container sx={{ mt: '1rem' }}>
       <Container>
-        <Typography variant="h5">Moves learnt by level up</Typography>
+        <Typography variant='h5'>Moves learnt by level up</Typography>
         <TableContainer
           component={Paper}
-          sx={{ mt: "1rem" }}
-          style={{ maxHeight: 400 }}
-        >
-          <Table sx={{ maxHeight: 0 }} aria-label="simple table">
+          sx={{ mt: '1rem' }}
+          style={{ maxHeight: 400 }}>
+          <Table sx={{ maxHeight: 0 }} aria-label='simple table'>
             <TableHead>
               <TableRow>
                 <TableCell>Lv.</TableCell>
@@ -118,7 +131,14 @@ function PokeMove(props) {
                   <TableCell>
                     <PokeType type={l.type} />
                   </TableCell>
-                  <TableCell>{setCap(l.cat)}</TableCell>
+                  <TableCell>
+                    <img
+                      src={cat_image(l.cat)}
+                      alt={l.cat}
+                      style={{ height: '20px' }}
+                      title={setCap(l.cat)}
+                    />
+                  </TableCell>
                   <TableCell>{l.power}</TableCell>
                   <TableCell>{l.acc}</TableCell>
                 </TableRow>
@@ -128,13 +148,12 @@ function PokeMove(props) {
         </TableContainer>
       </Container>
       <Container>
-        <Typography variant="h5">Moves learnt by machine</Typography>
+        <Typography variant='h5'>Moves learnt by machine</Typography>
         <TableContainer
           component={Paper}
-          sx={{ mt: "1rem" }}
-          style={{ maxHeight: 400 }}
-        >
-          <Table sx={{ maxHeight: 0 }} aria-label="simple table">
+          sx={{ mt: '1rem' }}
+          style={{ maxHeight: 400 }}>
+          <Table sx={{ maxHeight: 0 }} aria-label='simple table'>
             <TableHead>
               <TableRow>
                 <TableCell>Move</TableCell>
@@ -151,7 +170,14 @@ function PokeMove(props) {
                   <TableCell>
                     <PokeType type={m.type} />
                   </TableCell>
-                  <TableCell>{setCap(m.cat)}</TableCell>
+                  <TableCell>
+                    <img
+                      src={cat_image(m.cat)}
+                      alt={m.cat}
+                      style={{ height: '20px' }}
+                      title={setCap(m.cat)}
+                    />
+                  </TableCell>
                   <TableCell>{m.power}</TableCell>
                   <TableCell>{m.acc}</TableCell>
                 </TableRow>
