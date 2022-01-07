@@ -16,10 +16,10 @@ function Home() {
 
   return (
     <Container>
-      <Grid xs={12} sx={title_css}>
+      <Grid item xs={12} sx={title_css}>
         Welcome to Tuan's Pokedex
       </Grid>
-      <Grid xs={12}>
+      <Grid item xs={12}>
         <img src={image} alt="homepage" style={{ width: "100%" }} />
       </Grid>
     </Container>
